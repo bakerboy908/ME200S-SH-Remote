@@ -2,13 +2,19 @@
 #include <ME200S.hpp>
 
 void printArray(char array[]);
-
+#define testbutton 11
+void buttonPressed()
+{
+  Serial.println("Button Pressed");
+}
 void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(9600);
   delay(1000);
   Serial.println("Sending Status request in 5 seconds");
+  pinMode(testbutton, INPUT_PULLUP);
+  attachInterrupt(testbutton,buttonPressed,CHANGE);
 }
 
 void loop()
