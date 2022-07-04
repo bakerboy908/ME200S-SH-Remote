@@ -23,17 +23,14 @@ void loop()
     char data[10];
     camera.receivedData(data);
     Serial.print("Camera Versions: ");
-    // printArray(data);
+    printArray(data);
   }
   else
   {
     Serial.println();
     Serial.println("Failed to get camera version");
   }
-  while (1)
-  {
-    // do nothing forever
-  }
+
 }
 
 void printArray(char array[])
