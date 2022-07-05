@@ -7,11 +7,21 @@
 
 //Commands
 #define CAMERA_VERSION_REQUEST      0x01BE      // Return the camera’s firmware version
-
-
+#define SET_IRIS_POSITION           0x01A6      // set the iris possittion 
+#define FOCUS                       0x01A1      //Command for all focus's
 enum COMMAND_TYPE
 {
     TYPE1 = 34,
     TYPE2 = 300
 };
     
+enum APATURE_VALUES
+{
+    F2_8 = 0xCF,
+    F4_0 = 0xBF,
+    F5_6 =  0xAF,
+    F8 = 0x9F,
+    F11 = 0x8F,
+    F16 = 0x7F,
+    F22 = 0x6F
+};

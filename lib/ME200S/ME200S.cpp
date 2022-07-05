@@ -17,24 +17,37 @@ bool ME200S::cameraVersionRequest() // array size is hard coded as it does not c
     return commandReplay(TYPE1, 10);
 }
 
-bool ME200S::sendCommand(uint16_t Command,Vector<char> Paramaters_)
+bool ME200S::sendCommand(uint16_t Command, Vector<char> Paramaters_)
 {
-    Serial1.print(Header_,HEX);
-    Serial1.print(Device_Num_,HEX);
-    Serial1.print(Command,HEX);
+    Serial.println();
+    Serial.print(Header_, HEX);
+    Serial.print(Device_Num_, HEX);
+    Serial.print(Command, HEX);
     for (unsigned int i = 0; i < Paramaters_.size(); i++)
     {
-        Serial1.print(Paramaters_[i],HEX);
+        Serial.print(Paramaters_[i], HEX);
     }
-    Serial1.print(End_Mark_,HEX);
+    Serial.print(End_Mark_, HEX);
     return true;
 }
+// bool ME200S::sendCommand(uint16_t Command, Vector<char> Paramaters_)
+// {
+//     Serial1.print(Header_, HEX);
+//     Serial1.print(Device_Num_, HEX);
+//     Serial1.print(Command, HEX);
+//     for (unsigned int i = 0; i < Paramaters_.size(); i++)
+//     {
+//         Serial1.print(Paramaters_[i], HEX);
+//     }
+//     Serial1.print(End_Mark_, HEX);
+//     return true;
+// }
 
 bool ME200S::commandReplay(int commandType, int Paramater_Size)
 {
     while (millis() % commandType != 0) // while the command hasnt timed out;
-    {   
-        if (Serial1.available() >= Paramater_Size)
+    {
+        if (Serial1.available() >= Paramater_Size + 4)
         {
             Serial1.println(Paramater_Size);
             for (auto i = 0; i < Paramater_Size; i++)
@@ -59,4 +72,60 @@ bool ME200S::receivedData(char data[])
         return true;
     }
     return false;
+}
+
+// ╔═════════════════╦══════════╦═════════════════╦══════════╗
+// ║ Parameter Value ║ F number ║ Parameter Value ║ F number ║
+// ╠═════════════════╬══════════╬═════════════════╬══════════╣
+// ║ FF              ║      1.0 ║ 7F              ║       16 ║
+// ║ EF              ║      1.4 ║ 6F              ║       22 ║
+// ║ DF              ║      2.0 ║ 5F              ║       32 ║
+// ║ CF              ║      2.8 ║ 4F              ║       45 ║
+// ║ BF              ║      4.0 ║ 3F              ║       64 ║
+// ║ AF              ║      5.6 ║ 2F              ║       90 ║
+// ║ 9F              ║      8.0 ║ 1F              ║      128 ║
+// ║ 8F              ║       11 ║ 0F              ║      181 ║
+// ╚═════════════════╩══════════╩═════════════════╩══════════╝
+
+bool ME200S::setApature(uint16_t Apature)
+{
+    uint8_t char1 = (Apature & 0xF0) >> 4;
+    uint8_t char2 = (Apature & 0xf);
+
+    char vector_data[2];
+    Vector<char> paramaters(vector_data);
+    paramaters.push_back(char1);
+    paramaters.push_back(char2);
+    sendCommand(SET_IRIS_POSITION, paramaters);
+    return commandReplay(TYPE2, 10);
+}
+
+bool ME200S::AutoFocus(bool enable)
+{
+    char vector_data[2];
+    Vector<char> paramaters(vector_data);
+    if (enable)
+    {
+        paramaters.push_back('0');
+        /* code */
+    }
+    else
+    {
+        paramaters.push_back('1');
+        /* code */
+    }
+
+    sendCommand(FOCUS, paramaters);
+    return commandReplay(TYPE2, 2);
+}
+
+bool ME200S::oneShotAF()
+{
+    char vector_data[2];
+    Vector<char> paramaters(vector_data);
+
+    paramaters.push_back('A');
+
+    sendCommand(FOCUS, paramaters);
+    return commandReplay(TYPE2, 2);
 }

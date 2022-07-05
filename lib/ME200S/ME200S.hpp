@@ -31,9 +31,9 @@ public:
     int recivedBufferSize;
     ME200S(/* args */);
     ~ME200S();
-    void setApature(float Apature);
-    void oneShotAF();
-    void AutoFocus(bool enable);
+    bool setApature(uint16_t Apature);
+    bool oneShotAF();
+    bool AutoFocus(bool enable);
     void ShutterControl();
     void statusUpdate();
     bool cameraVersionRequest(); // array size is hard coded as it does not change;

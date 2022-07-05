@@ -11,20 +11,23 @@ void printArray(char array[]);
 #define F4_0_BUTTON_PIN A1
 #define F5_6_BUTTON_PIN A2
 #define F8_0_BUTTON_PIN A3
-#define F11_BUTTON_PIN  A5
+#define F11_BUTTON_PIN A5
 #define F16_BUTTON_PIN A7
 #define F22_BUTTON_PIN 10
 
+ME200S camera;
 
-
-
+bool CheckFucntion = false;
+bool AutoFocus = false;
+bool oneShotAF = false;
+uint16_t SetApature = 0;
 void checkButton()
 {
   static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
-    Serial.println("Check Button Pressed");
+    CheckFucntion = true;
   }
   last_interrupt_time = interrupt_time;
 }
@@ -35,6 +38,7 @@ void autoFocusButton()
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
     Serial.println("Auto Focus Button Pressed");
+    AutoFocus = true;
   }
   last_interrupt_time = interrupt_time;
 }
@@ -65,6 +69,7 @@ void oneShotAFButton()
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
     Serial.println("One Shot AF Button Pressed");
+    oneShotAF = true;
   }
   last_interrupt_time = interrupt_time;
 }
@@ -75,6 +80,7 @@ void f2_8Button()
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
     Serial.println("F2.8 Button Pressed");
+    SetApature = F2_8;
   }
   last_interrupt_time = interrupt_time;
 }
@@ -85,6 +91,7 @@ void F4_0Button()
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
     Serial.println("F4.0 Button Pressed");
+    SetApature = F4_0;
   }
   last_interrupt_time = interrupt_time;
 }
@@ -95,6 +102,7 @@ void F5_6Button()
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
     Serial.println("F5.6 Button Pressed");
+    SetApature = F5_6;
   }
   last_interrupt_time = interrupt_time;
 }
@@ -105,6 +113,7 @@ void F8_0Button()
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
     Serial.println("F 8.0 Button Pressed");
+    SetApature = F8;
   }
   last_interrupt_time = interrupt_time;
 }
@@ -115,6 +124,7 @@ void F11Button()
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
     Serial.println("F11 Button Pressed");
+    SetApature = F11;
   }
   last_interrupt_time = interrupt_time;
 }
@@ -125,6 +135,7 @@ void F16Button()
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
     Serial.println("F16 Button Pressed");
+    SetApature = F16;
   }
   last_interrupt_time = interrupt_time;
 }
@@ -135,19 +146,17 @@ void F22Button()
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
     Serial.println("F22 Button Pressed");
+    SetApature = F22;
   }
   last_interrupt_time = interrupt_time;
 }
-
-
-
 
 void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(9600);
   delay(1000);
-  Serial.println("Sending Status request in 5 seconds");
+  Serial.println("Setup Started");
   pinMode(CHECK_BUTTON_PIN, INPUT_PULLUP);
   attachInterrupt(CHECK_BUTTON_PIN, checkButton, FALLING);
 
@@ -183,27 +192,61 @@ void setup()
 
   pinMode(F22_BUTTON_PIN, INPUT_PULLUP);
   attachInterrupt(F22_BUTTON_PIN, F22Button, FALLING);
+  Serial.println("Setup Completed");
 }
 
+void checkFunction()
+{
+  if (CheckFucntion)
+  {
+    if (camera.cameraVersionRequest())
+    {
+
+      char data[10];
+      camera.receivedData(data);
+      Serial.print("Camera Versions: ");
+      printArray(data);
+    }
+    else
+    {
+      Serial.println();
+      Serial.println("Failed to get camera version");
+    }
+    CheckFucntion = false;
+  }
+}
+void setApature()
+{
+  if (SetApature)
+  {
+    camera.setApature(SetApature);
+    SetApature = 0;
+  }
+}
+void setAutoFocus()
+{
+  if (AutoFocus)
+  {
+  camera.AutoFocus(true);
+    AutoFocus = false;
+  }
+  
+}
+void oneShotFocus()
+{if (oneShotAF)
+{
+  camera.oneShotAF();
+  oneShotAF = false;
+}
+
+}
 void loop()
 {
-  // put your main code here, to run repeatedly:
+  checkFunction();
+  setApature();
+  setAutoFocus();
+  oneShotFocus();
 
-  delay(5000);
-  ME200S camera;
-  if (camera.cameraVersionRequest())
-  {
-
-    char data[10];
-    camera.receivedData(data);
-    Serial.print("Camera Versions: ");
-    printArray(data);
-  }
-  else
-  {
-    Serial.println();
-    Serial.println("Failed to get camera version");
-  }
 }
 
 void printArray(char array[])
