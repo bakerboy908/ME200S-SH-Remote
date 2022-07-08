@@ -242,10 +242,12 @@ void oneShotFocus()
 }
 void loop()
 {
+  delay(1000);
+  CheckFucntion = true;
   checkFunction();
-  setApature();
-  setAutoFocus();
-  oneShotFocus();
+  // setApature();
+  // setAutoFocus();
+  // oneShotFocus();
 
 }
 

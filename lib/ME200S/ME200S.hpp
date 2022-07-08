@@ -20,7 +20,7 @@ private:
 
     char commandReplyStorage[MAX_REPLAY_SIZE];
     Vector<char> receivedData_vec;
-    bool commandReplay(int commandType, int Paramater_Size);
+    bool commandReplay(unsigned long  commandType, int Paramater_Size);
 
 
 
