@@ -155,6 +155,7 @@ void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  Serial1.begin(9600);
   delay(1000);
   Serial.println("Setup Started");
   pinMode(CHECK_BUTTON_PIN, INPUT_PULLUP);
@@ -220,35 +221,43 @@ void setApature()
   if (SetApature)
   {
     camera.setApature(SetApature);
-    SetApature = 0;
+    // SetApature = 0;
   }
 }
 void setAutoFocus()
 {
   if (AutoFocus)
   {
-  camera.AutoFocus(true);
+    camera.AutoFocus(true);
     AutoFocus = false;
   }
-  
 }
 void oneShotFocus()
-{if (oneShotAF)
 {
-  camera.oneShotAF();
-  oneShotAF = false;
-}
-
+  if (oneShotAF)
+  {
+    camera.oneShotAF();
+    oneShotAF = false;
+  }
 }
 void loop()
 {
-  delay(1000);
-  CheckFucntion = true;
+  // delay(1000);
+  // CheckFucntion = true;
   checkFunction();
-  // setApature();
-  // setAutoFocus();
-  // oneShotFocus();
+  if (SetApature)
+  {
+    /* code */
+    for (auto i = 0; i < 15; i++)
+    {
+      setApature();
+      /* code */
+    }
+    SetApature = 0;
+  }
 
+  setAutoFocus();
+  oneShotFocus();
 }
 
 void printArray(char array[])
