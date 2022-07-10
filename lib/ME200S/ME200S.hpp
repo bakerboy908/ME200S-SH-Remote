@@ -21,6 +21,8 @@ private:
     char commandReplyStorage[MAX_REPLAY_SIZE];
     Vector<char> receivedData_vec;
     bool commandReplay(unsigned long  commandType, int Paramater_Size);
+    byte replyStorage[MAX_REPLAY_SIZE];
+    int replyStorageSize = 0;
 
 
 
@@ -42,6 +44,7 @@ public:
     void printArray();
     bool irisPossition();
     void printArrayDirect();
+    void printReplyStorage();
 
 };
 

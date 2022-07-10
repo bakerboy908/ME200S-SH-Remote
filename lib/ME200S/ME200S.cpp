@@ -47,46 +47,118 @@ bool ME200S::sendCommand(uint16_t Command, Vector<char> Paramaters_)
 
 bool ME200S::commandReplay(unsigned long commandType, int Paramater_Size)
 {
+    byte buffer[MAX_REPLAY_SIZE];
     auto currenttime = millis();                       // commandType;
     while (millis() - currenttime < commandType + 500) // while the command hasnt timed out;
     {
-        if (Serial1.available() >= Paramater_Size + 6)
+        if (Serial1.available() >= 1) // Paramater_Size + 6)
         {
-            if (Serial1.read() == 0xFE)
+            auto size = Serial1.readBytesUntil(0xEF, buffer, MAX_REPLAY_SIZE);
+            Serial.println();
+            Serial.println("Buffer Contents");
+            for (auto i = 0; i < size; i++)
             {
-                if (Serial1.read() == 0x30)
+                Serial.print(buffer[i], HEX);
+            }
+            if (buffer[3] == 0x30 && buffer[4] == 0x030) // if no errors
+            {
+                receivedData_vec.clear();
+                for (auto i = 0; i < Paramater_Size; i++)
                 {
-                    if (Serial1.read() == 0x30)
-                    {
-                        if (Serial1.read() == 0x30 && Serial1.read() == 0x30)
-                        {
-
-                            receivedData_vec.clear();
-                            for (auto i = 0; i < Paramater_Size - 1; i++)
-                            {
-                                receivedData_vec.push_back(Serial1.read());
-                            }
-                            recivedBufferSize = Paramater_Size;
-                            Serial1.flush();
-                            return true;
-                        }
-                        else
-                        {
-                            Serial.println("ERROR");
-                            for (auto i = 0; i < 1; i++)
-                            {
-                                receivedData_vec.push_back(Serial1.read());
-                                /* code */
-                            }
-                        }
-                    }
+                    receivedData_vec.push_back(buffer[i+5]);
                 }
             }
+
+            Serial.println();
+            Serial.println("Command Replay vector Contents");
+            printArray();
+            // if (Serial1.read() == 0xFE)
+            // {
+            //     if (Serial1.read() == 0x30)
+            //     {
+            //         if (Serial1.read() == 0x30)
+            //         {
+            //             if (Serial1.read() == 0x30 && Serial1.read() == 0x30)
+            //             {
+
+            //                 receivedData_vec.clear();
+            //                 replyStorageSize = 0;
+            //                 for (auto i = 0; i < Paramater_Size - 1; i++)
+            //                 {
+            //                     auto data = Serial1.read();
+            //                     receivedData_vec.push_back(data);
+
+            //                     replyStorage[i] = data;
+            //                     replyStorageSize++;
+            //                 }
+            //                 recivedBufferSize = Paramater_Size;
+            //                 Serial1.flush();
+            //                 return true;
+            //             }
+            //             else
+            //             {
+            //                 Serial.println("ERROR");
+            //                 for (auto i = 0; i < 1; i++)
+            //                 {
+            //                     receivedData_vec.push_back(Serial1.read());
+            //                     /* code */
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
         }
     }
     Serial1.flush();
     return false;
 }
+// bool ME200S::commandReplay(unsigned long commandType, int Paramater_Size)
+// {
+//     auto currenttime = millis();                       // commandType;
+//     while (millis() - currenttime < commandType + 500) // while the command hasnt timed out;
+//     {
+//         if (Serial1.available() >= Paramater_Size + 6)
+//         {
+//             if (Serial1.read() == 0xFE)
+//             {
+//                 if (Serial1.read() == 0x30)
+//                 {
+//                     if (Serial1.read() == 0x30)
+//                     {
+//                         if (Serial1.read() == 0x30 && Serial1.read() == 0x30)
+//                         {
+
+//                             receivedData_vec.clear();
+//                             replyStorageSize = 0;
+//                             for (auto i = 0; i < Paramater_Size - 1; i++)
+//                             {
+//                                 auto data = Serial1.read();
+//                                 receivedData_vec.push_back(data);
+
+//                                 replyStorage[i] = data;
+//                                 replyStorageSize++;
+//                             }
+//                             recivedBufferSize = Paramater_Size;
+//                             Serial1.flush();
+//                             return true;
+//                         }
+//                         else
+//                         {
+//                             Serial.println("ERROR");
+//                             for (auto i = 0; i < 1; i++)
+//                             {
+//                                 receivedData_vec.push_back(Serial1.read());
+//                                 /* code */
+//                             }
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     Serial1.flush();
+//     return false;
+// }
 void ME200S::printArray()
 {
     Serial.print("Paramater Size: ");
@@ -205,17 +277,24 @@ bool ME200S::irisPossition()
     paramaters.push_back(0x2);
     Serial1.flush();
     sendCommand(GET_IRIS_POSITION, paramaters);
-    return commandReplay(TYPE2, 3);
+    return commandReplay(TYPE2, 2);
 }
 void ME200S::printArrayDirect()
 {
     Serial.println();
     int size = receivedData_vec.size();
-        Serial.print("Direct array print: ");
-    for (auto i = 0; i < 50; i++)
+    Serial.print("Direct array print: ");
+    for (auto i = 0; i < size; i++)
     {
         Serial.print(commandReplyStorage[i]);
     }
     Serial.println();
-    
+}
+void ME200S::printReplyStorage()
+{
+    Serial.println("Reply Storage Contents: ");
+    for (auto i = 0; i < replyStorageSize; i++)
+    {
+        Serial.print((char)replyStorage[i]);
+    }
 }
