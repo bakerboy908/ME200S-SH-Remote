@@ -8,6 +8,7 @@
 //Commands
 #define CAMERA_VERSION_REQUEST      0x01BE      // Return the camera’s firmware version
 #define SET_IRIS_POSITION           0x01A6      // set the iris possittion 
+#define GET_IRIS_POSITION           0x01C3      // Request the current iris possition
 #define FOCUS                       0x01A1      //Command for all focus's
 enum COMMAND_TYPE
 {

@@ -32,12 +32,16 @@ public:
     ME200S(/* args */);
     ~ME200S();
     bool setApature(uint16_t Apature);
+    bool setApatureBlocking(uint16_t Apature);
     bool oneShotAF();
     bool AutoFocus(bool enable);
     void ShutterControl();
     void statusUpdate();
     bool cameraVersionRequest(); // array size is hard coded as it does not change;
     bool receivedData(char data[]);           // Returns a pointer to the paramater data;
+    void printArray();
+    bool irisPossition();
+    void printArrayDirect();
 
 };
 

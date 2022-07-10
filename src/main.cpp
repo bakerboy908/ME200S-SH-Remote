@@ -202,11 +202,8 @@ void checkFunction()
   {
     if (camera.cameraVersionRequest())
     {
-
-      char data[10];
-      camera.receivedData(data);
       Serial.print("Camera Versions: ");
-      printArray(data);
+      camera.printArray();
     }
     else
     {
@@ -220,8 +217,22 @@ void setApature()
 {
   if (SetApature)
   {
-    camera.setApature(SetApature);
-    // SetApature = 0;
+    bool success = false;
+    // for (auto i = 0; i < 10; i++)
+    {
+      /* code */
+      // while (!success)
+      {
+        success = camera.setApature(SetApature);
+        // success = camera.setApatureBlocking(SetApature);
+      } // send set apature until successful
+    }
+        SetApature = 0;
+        // delay(1000);
+    camera.irisPossition();
+    Serial.println("Iris Possition: ");
+    camera.printArray();
+    camera.printArrayDirect();
   }
 }
 void setAutoFocus()
@@ -245,16 +256,9 @@ void loop()
   // delay(1000);
   // CheckFucntion = true;
   checkFunction();
-  if (SetApature)
-  {
-    /* code */
-    for (auto i = 0; i < 15; i++)
-    {
-      setApature();
-      /* code */
-    }
-    SetApature = 0;
-  }
+
+  setApature();
+  /* code */
 
   setAutoFocus();
   oneShotFocus();
@@ -263,9 +267,6 @@ void loop()
 void printArray(char array[])
 {
   char *arrayPtr = array;
-  while (arrayPtr != NULL)
-  {
-    Serial.print(*arrayPtr);
-    arrayPtr++;
-  }
+  arrayPtr++;
+  Serial.print(arrayPtr);
 }
