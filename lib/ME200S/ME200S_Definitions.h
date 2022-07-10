@@ -10,6 +10,9 @@
 #define SET_IRIS_POSITION           0x01A6      // set the iris possittion 
 #define GET_IRIS_POSITION           0x01C3      // Request the current iris possition
 #define FOCUS                       0x01A1      //Command for all focus's
+#define SHUTTER_SPEED_CONTROL       0x01AD      //Control shutter speed
+#define SHUTTER_SPEED_CONTROL_FINE  0x019D      //Control shutter speed
+#define GAIN_CONTROL_FINE           0x19E       //Gain Control
 enum COMMAND_TYPE
 {
     TYPE1 = 34,

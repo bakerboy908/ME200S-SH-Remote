@@ -20,6 +20,8 @@ ME200S camera;
 bool CheckFucntion = false;
 bool AutoFocus = false;
 bool oneShotAF = false;
+bool changeShutter = false;
+bool changeGain = false;
 uint16_t SetApature = 0;
 void checkButton()
 {
@@ -42,13 +44,14 @@ void autoFocusButton()
   }
   last_interrupt_time = interrupt_time;
 }
-void setButton()
+void setGainButton()
 {
   static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
-    Serial.println("set Button Pressed");
+    Serial.println("set gain Button Pressed");
+    changeGain = true;
   }
   last_interrupt_time = interrupt_time;
 }
@@ -59,6 +62,7 @@ void shutterControlButton()
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
     Serial.println("Shutter Control Button Pressed");
+    changeShutter = true;
   }
   last_interrupt_time = interrupt_time;
 }
@@ -165,7 +169,7 @@ void setup()
   attachInterrupt(AUTO_FOCUS_PIN, autoFocusButton, FALLING);
 
   pinMode(SET_BUTTON_PIN, INPUT_PULLUP);
-  attachInterrupt(SET_BUTTON_PIN, setButton, FALLING);
+  attachInterrupt(SET_BUTTON_PIN, setGainButton, FALLING);
 
   pinMode(SHUTTER_COONTROL_BUTTON_PIN, INPUT_PULLUP);
   attachInterrupt(SHUTTER_COONTROL_BUTTON_PIN, shutterControlButton, FALLING);
@@ -253,6 +257,24 @@ void oneShotFocus()
     oneShotAF = false;
   }
 }
+void setShutterSpeed()
+{
+  if (changeShutter)
+  {
+    camera.setShutter();
+    changeShutter = false;
+  }
+  
+}
+void changeCameraGain()
+{
+  if (changeGain)
+  {
+    camera.setGain();
+    changeGain = false;
+  }
+  
+}
 void loop()
 {
   // delay(1000);
@@ -264,6 +286,8 @@ void loop()
 
   setAutoFocus();
   oneShotFocus();
+  setShutterSpeed();
+  changeCameraGain();
 }
 
 void printArray(char array[])

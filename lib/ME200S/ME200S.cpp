@@ -13,11 +13,11 @@ bool ME200S::cameraVersionRequest() // array size is hard coded as it does not c
     char vector_data[1];
     Vector<char> paramaters(vector_data);
     paramaters.push_back(0);
-    sendCommand(CAMERA_VERSION_REQUEST, paramaters);
+    sendCommand(CAMERA_VERSION_REQUEST, paramaters,true);
     return commandReplay(TYPE1, 10);
 }
 
-bool ME200S::sendCommand(uint16_t Command, Vector<char> Paramaters_)
+bool ME200S::sendCommand(uint16_t Command, Vector<char> Paramaters_, bool HEXMODE)
 {
     // Serial1.println();
     Serial1.write(Header_);
@@ -27,7 +27,15 @@ bool ME200S::sendCommand(uint16_t Command, Vector<char> Paramaters_)
     Serial1.write(Command);
     for (unsigned int i = 0; i <= Paramaters_.size() - 1; i++)
     {
-        Serial1.print(Paramaters_[i], HEX);
+        if (HEXMODE)
+        {
+        Serial1.print(Paramaters_[i],HEX);
+            /* code */
+        }
+        else
+        Serial1.print(Paramaters_[i]);
+        
+
     }
     Serial1.write(End_Mark_);
     return true;
@@ -172,7 +180,7 @@ bool ME200S::setApature(uint16_t Apature)
     Vector<char> paramaters(vector_data);
     paramaters.push_back(char1);
     paramaters.push_back(char2);
-    sendCommand(SET_IRIS_POSITION, paramaters);
+    sendCommand(SET_IRIS_POSITION, paramaters,true);
     return commandReplay(TYPE2, 0);
 }
 
@@ -197,7 +205,7 @@ bool ME200S::setApatureBlocking(uint16_t Apature)
     bool success = false;
     while (!success)
         {
-            sendCommand(SET_IRIS_POSITION, paramaters);
+            sendCommand(SET_IRIS_POSITION, paramaters,true);
             commandReplay(TYPE2, 0);
             this->irisPossition();
 
@@ -237,18 +245,19 @@ bool ME200S::AutoFocus(bool enable)
         /* code */
     }
 
-    sendCommand(FOCUS, paramaters);
+    sendCommand(FOCUS, paramaters,false);
     return commandReplay(TYPE2, 2);
 }
 
 bool ME200S::oneShotAF()
 {
-    char vector_data[2];
+    AutoFocus(false);
+    char vector_data[1];
     Vector<char> paramaters(vector_data);
 
     paramaters.push_back('A');
 
-    sendCommand(FOCUS, paramaters);
+    sendCommand(FOCUS, paramaters,false);
     return commandReplay(TYPE2, 2);
 }
 
@@ -269,7 +278,7 @@ bool ME200S::irisPossition()
 
     paramaters.push_back(0x2);
     Serial1.flush();
-    sendCommand(GET_IRIS_POSITION, paramaters);
+    sendCommand(GET_IRIS_POSITION, paramaters,true);
     return commandReplay(TYPE2, 2);
 }
 void ME200S::printArrayDirect()
@@ -291,3 +300,30 @@ void ME200S::printReplyStorage()
         Serial.print((char)replyStorage[i]);
     }
 }
+
+bool ME200S::setShutter()
+{
+        
+    char vector_data[2];
+    Vector<char> paramaters(vector_data);
+
+    paramaters.push_back('1');
+    paramaters.push_back('0');
+
+    sendCommand(SHUTTER_SPEED_CONTROL_FINE, paramaters,false);
+    return commandReplay(TYPE2, 2);
+}
+
+bool ME200S::setGain()
+{
+        
+    char vector_data[2];
+    Vector<char> paramaters(vector_data);
+
+    paramaters.push_back('0');
+    paramaters.push_back('0');
+
+    sendCommand(GAIN_CONTROL_FINE, paramaters,false);
+    return commandReplay(TYPE2, 2);
+}
+

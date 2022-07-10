@@ -16,7 +16,7 @@ private:
 
     const uint16_t Device_Num_ = 0x3030;
     uint16_t Error_Code_; 
-    bool sendCommand(uint16_t Command,Vector<char> Paramaters_);
+    bool sendCommand(uint16_t Command,Vector<char> Paramaters_,bool HEXMODE);
 
     char commandReplyStorage[MAX_REPLAY_SIZE];
     Vector<char> receivedData_vec;
@@ -45,6 +45,8 @@ public:
     bool irisPossition();
     void printArrayDirect();
     void printReplyStorage();
+    bool setShutter();
+    bool setGain();
 
 };
 
