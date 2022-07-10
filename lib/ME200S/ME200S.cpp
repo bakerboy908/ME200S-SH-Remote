@@ -54,59 +54,24 @@ bool ME200S::commandReplay(unsigned long commandType, int Paramater_Size)
         if (Serial1.available() >= 1) // Paramater_Size + 6)
         {
             auto size = Serial1.readBytesUntil(0xEF, buffer, MAX_REPLAY_SIZE);
-            Serial.println();
-            Serial.println("Buffer Contents");
-            for (auto i = 0; i < size; i++)
-            {
-                Serial.print(buffer[i], HEX);
-            }
+            // Serial.println();
+            // Serial.println("Buffer Contents");
+            // for (auto i = 0; i < size; i++)
+            // {
+            //     Serial.print(buffer[i], HEX);
+            // }
             if (buffer[3] == 0x30 && buffer[4] == 0x030) // if no errors
             {
                 receivedData_vec.clear();
                 for (auto i = 0; i < Paramater_Size; i++)
                 {
-                    receivedData_vec.push_back(buffer[i+5]);
+                    receivedData_vec.push_back(buffer[i + 5]);
                 }
+                // Serial.println();
+                // Serial.println("Command Replay vector Contents");
+                // printArray();
+                return true;
             }
-
-            Serial.println();
-            Serial.println("Command Replay vector Contents");
-            printArray();
-            // if (Serial1.read() == 0xFE)
-            // {
-            //     if (Serial1.read() == 0x30)
-            //     {
-            //         if (Serial1.read() == 0x30)
-            //         {
-            //             if (Serial1.read() == 0x30 && Serial1.read() == 0x30)
-            //             {
-
-            //                 receivedData_vec.clear();
-            //                 replyStorageSize = 0;
-            //                 for (auto i = 0; i < Paramater_Size - 1; i++)
-            //                 {
-            //                     auto data = Serial1.read();
-            //                     receivedData_vec.push_back(data);
-
-            //                     replyStorage[i] = data;
-            //                     replyStorageSize++;
-            //                 }
-            //                 recivedBufferSize = Paramater_Size;
-            //                 Serial1.flush();
-            //                 return true;
-            //             }
-            //             else
-            //             {
-            //                 Serial.println("ERROR");
-            //                 for (auto i = 0; i < 1; i++)
-            //                 {
-            //                     receivedData_vec.push_back(Serial1.read());
-            //                     /* code */
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
         }
     }
     Serial1.flush();
@@ -161,8 +126,8 @@ bool ME200S::commandReplay(unsigned long commandType, int Paramater_Size)
 // }
 void ME200S::printArray()
 {
-    Serial.print("Paramater Size: ");
-    Serial.println(receivedData_vec.size());
+    // Serial.print("Paramater Size: ");
+    // Serial.println(receivedData_vec.size());
     for (int i = 0; i < receivedData_vec.size(); i++)
     {
         Serial.print(receivedData_vec.at(i));
@@ -210,6 +175,16 @@ bool ME200S::setApature(uint16_t Apature)
     sendCommand(SET_IRIS_POSITION, paramaters);
     return commandReplay(TYPE2, 0);
 }
+
+uint8_t charToint(char input)
+{
+    if (input == 'A' || input == 'B' || input == 'C' || input == 'D' || input == 'E' || input == 'F')
+    {
+        return input - 'A' + 10;
+    }
+    else
+        return input - '0';
+}
 bool ME200S::setApatureBlocking(uint16_t Apature)
 {
     uint8_t char1 = (Apature & 0xF0) >> 4;
@@ -220,13 +195,31 @@ bool ME200S::setApatureBlocking(uint16_t Apature)
     paramaters.push_back(char1);
     paramaters.push_back(char2);
     bool success = false;
-    while (receivedData_vec[0] != (Apature & 0xF0) >> 4 && receivedData_vec[1] != (Apature & 0xF))
-    {
-        sendCommand(SET_IRIS_POSITION, paramaters);
-        commandReplay(TYPE2, 0);
-        this->irisPossition();
-        printArray();
-    }
+    while (!success)
+        {
+            sendCommand(SET_IRIS_POSITION, paramaters);
+            commandReplay(TYPE2, 0);
+            this->irisPossition();
+
+            if (charToint(receivedData_vec[0]) == char1 && charToint(receivedData_vec[1]) == char2)
+            {
+                Serial.println("Success");
+                success = true;
+            }
+            else
+            {
+
+                Serial.println("Failed");
+                // Serial.print("Got: ");
+                // Serial.print(charToint(receivedData_vec[0]));
+                // Serial.print(" Expected: ");
+                // Serial.println(char1);
+                // Serial.print("Got: ");
+                // Serial.print(charToint(receivedData_vec[1]));
+                // Serial.print(" Expected: ");
+                // Serial.println(char2);
+            }
+        }
 }
 
 bool ME200S::AutoFocus(bool enable)

@@ -224,8 +224,8 @@ void setApature()
       // while (!success)
       {
         Serial.println("Setting Aparture");
-        success = camera.setApature(SetApature);
-        // success = camera.setApatureBlocking(SetApature);
+        // success = camera.setApature(SetApature);
+        success = camera.setApatureBlocking(SetApature);
       } // send set apature until successful
     }
         SetApature = 0;
