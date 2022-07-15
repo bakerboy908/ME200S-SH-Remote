@@ -2,6 +2,8 @@
 #include <ME200S.hpp>
 #define debounceTime 200
 void printArray(char array[]);
+#ifdef VERSION_ONE
+
 #define CHECK_BUTTON_PIN 11
 #define AUTO_FOCUS_PIN 8
 #define SET_BUTTON_PIN 5
@@ -14,7 +16,21 @@ void printArray(char array[]);
 #define F11_BUTTON_PIN A5
 #define F16_BUTTON_PIN A7
 #define F22_BUTTON_PIN 10
-
+#endif
+#ifndef VERSION_ONE
+#define CHECK_BUTTON_PIN A4
+#define AUTO_FOCUS_PIN A3
+#define SET_BUTTON_PIN A2
+#define SHUTTER_COONTROL_BUTTON_PIN A1
+#define ONESHOT_AF_BUTTON_PIN A0
+#define F2_8_BUTTON_PIN 5
+#define F4_0_BUTTON_PIN 6
+#define F5_6_BUTTON_PIN 7
+#define F8_0_BUTTON_PIN 9
+#define F11_BUTTON_PIN 10
+#define F16_BUTTON_PIN 11
+#define F22_BUTTON_PIN 12
+#endif
 ME200S camera;
 
 bool CheckFucntion = false;
