@@ -183,7 +183,9 @@ void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  #ifndef ARDUINO_AVR_UNO
   Serial1.begin(9600);
+  #endif
   delay(1000);
   Serial.println("Setup Started");
   pinMode(BUTTION_1, INPUT_PULLUP);
@@ -319,7 +321,7 @@ void setColourTemp()
 }
 void loop()
 {
-  // delay(1000);
+  delay(1000);
   // CheckFucntion = true;
   checkFunction();
 
@@ -329,8 +331,11 @@ void loop()
   setAutoFocus();
   oneShotFocus();
   setShutterSpeed();
-  setND();
+  
+  setND();   
+  // ChangeColour = true;         
   setColourTemp();
+  Gain = G6;
   changeCameraGain();
 }
 

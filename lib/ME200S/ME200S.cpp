@@ -17,6 +17,7 @@ bool ME200S::cameraVersionRequest() // array size is hard coded as it does not c
     return commandReplay(TYPE1, 10);
 }
 
+#ifndef ARDUINO_AVR_UNO 
 bool ME200S::sendCommand(uint16_t Command, Vector<char> Paramaters_, bool HEXMODE)
 {
     // Serial1.println();
@@ -40,19 +41,6 @@ bool ME200S::sendCommand(uint16_t Command, Vector<char> Paramaters_, bool HEXMOD
     Serial1.write(End_Mark_);
     return true;
 }
-// bool ME200S::sendCommand(uint16_t Command, Vector<char> Paramaters_)
-// {
-//     Serial1.print(Header_, HEX);
-//     Serial1.print(Device_Num_, HEX);
-//     Serial1.print(Command, HEX);
-//     for (unsigned int i = 0; i < Paramaters_.size(); i++)
-//     {
-//         Serial1.print(Paramaters_[i], HEX);
-//     }
-//     Serial1.print(End_Mark_, HEX);
-//     return true;
-// }
-
 bool ME200S::commandReplay(unsigned long commandType, int Paramater_Size)
 {
     byte buffer[MAX_REPLAY_SIZE];
@@ -85,6 +73,66 @@ bool ME200S::commandReplay(unsigned long commandType, int Paramater_Size)
     Serial1.flush();
     return false;
 }
+#endif
+#ifdef ARDUINO_AVR_UNO
+bool ME200S::sendCommand(uint16_t Command, Vector<char> Paramaters_, bool HEXMODE)
+{
+    // Serial1.println();
+    Serial.write(Header_);
+    Serial.write(Device_Num_ >> 8);
+    Serial.write(Device_Num_);
+    Serial.write(Command >> 8);
+    Serial.write(Command);
+    for (unsigned int i = 0; i <= Paramaters_.size() - 1; i++)
+    {
+        if (HEXMODE)
+        {
+        Serial.print(Paramaters_[i],HEX);
+            /* code */
+        }
+        else
+        Serial.print(Paramaters_[i]);
+        
+
+    }
+    Serial.write(End_Mark_);
+    return true;
+}
+bool ME200S::commandReplay(unsigned long commandType, int Paramater_Size)
+{
+    byte buffer[MAX_REPLAY_SIZE];
+    auto currenttime = millis();                       // commandType;
+    while (millis() - currenttime < commandType + 500) // while the command hasnt timed out;
+    {
+        if (Serial.available() >= 1) // Paramater_Size + 6)
+        {
+            auto size = Serial.readBytesUntil(0xEF, buffer, MAX_REPLAY_SIZE);
+            // Serial.println();
+            // Serial.println("Buffer Contents");
+            // for (auto i = 0; i < size; i++)
+            // {
+            //     Serial.print(buffer[i], HEX);
+            // }
+            if (buffer[3] == 0x30 && buffer[4] == 0x030) // if no errors
+            {
+                receivedData_vec.clear();
+                for (auto i = 0; i < Paramater_Size; i++)
+                {
+                    receivedData_vec.push_back(buffer[i + 5]);
+                }
+                // Serial.println();
+                // Serial.println("Command Replay vector Contents");
+                // printArray();
+                return true;
+            }
+        }
+    }
+    Serial.flush();
+    return false;
+}
+#endif
+
+
 // bool ME200S::commandReplay(unsigned long commandType, int Paramater_Size)
 // {
 //     auto currenttime = millis();                       // commandType;
@@ -277,7 +325,9 @@ bool ME200S::irisPossition()
     Vector<char> paramaters(vector_data);
 
     paramaters.push_back(0x2);
+    #ifndef ARDUINO_AVR_UNO
     Serial1.flush();
+    #endif
     sendCommand(GET_IRIS_POSITION, paramaters,true);
     return commandReplay(TYPE2, 2);
 }
@@ -340,7 +390,7 @@ bool ME200S::setWhiteKelv()
     paramaters.push_back('2');
     paramaters.push_back('E');
 
-    sendCommand(SHUTTER_SPEED_CONTROL_FINE, paramaters,false);
+    sendCommand(SET_WHITE_BALANCE_KELV, paramaters,false);
     return commandReplay(TYPE2, 2);
 }
 
@@ -352,7 +402,7 @@ bool ME200S::setND()
     paramaters.push_back('0');
 
 
-    sendCommand(SHUTTER_SPEED_CONTROL_FINE, paramaters,false);
+    sendCommand(ND_FILTER_CONTROL, paramaters,false);
     return commandReplay(TYPE2, 2);
 
 }
