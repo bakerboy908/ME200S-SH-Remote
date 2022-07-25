@@ -46,7 +46,7 @@ bool ChangeColour = false;
 bool Gain0 = false;
 
 uint16_t SetApature = 0;
-uint16_t Gain = 0;
+uint16_t Gain = 1000;
 
 
 void Buttion_1()
@@ -299,10 +299,10 @@ void setShutterSpeed()
 }
 void changeCameraGain()
 {
-  if (Gain)
+  if (Gain != 1000)
   {
     camera.setGain(Gain);
-    Gain = 0;
+    Gain = 1000;
   }
   
 }
@@ -349,10 +349,10 @@ void loop()
   setND();   
   // ChangeColour = true;         
   setColourTemp();
-  Gain = G6;
+
   changeCameraGain();
 
-  setgain0();
+  // setgain0();
 }
 
 void printArray(char array[])
