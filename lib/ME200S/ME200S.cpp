@@ -68,6 +68,12 @@ bool ME200S::commandReplay(unsigned long commandType, int Paramater_Size)
                 // printArray();
                 return true;
             }
+            else
+            {
+                Serial.println("ERROR");
+                Serial.println(buffer[3]);
+                Serial.println(buffer[4]);
+            }
         }
     }
     Serial1.flush();
