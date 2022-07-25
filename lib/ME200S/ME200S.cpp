@@ -314,16 +314,45 @@ bool ME200S::setShutter()
     return commandReplay(TYPE2, 2);
 }
 
-bool ME200S::setGain()
+bool ME200S::setGain(uint16_t Gain)
 {
+    uint8_t char1 = (Gain & 0xF0) >> 4;
+    uint8_t char2 = (Gain & 0xf);
         
     char vector_data[2];
     Vector<char> paramaters(vector_data);
 
-    paramaters.push_back('0');
-    paramaters.push_back('0');
+    // paramaters.push_back('0');
+    // paramaters.push_back('0');
+    paramaters.push_back(char1);
+    paramaters.push_back(char2);
 
-    sendCommand(GAIN_CONTROL_FINE, paramaters,false);
+    sendCommand(GAIN_CONTROL_FINE, paramaters,true);
     return commandReplay(TYPE2, 2);
 }
 
+bool ME200S::setWhiteKelv()
+{
+        char vector_data[3];
+    Vector<char> paramaters(vector_data);
+
+    paramaters.push_back(0x31);
+    paramaters.push_back('2');
+    paramaters.push_back('E');
+
+    sendCommand(SHUTTER_SPEED_CONTROL_FINE, paramaters,false);
+    return commandReplay(TYPE2, 2);
+}
+
+bool ME200S::setND()
+{
+        char vector_data[3];
+    Vector<char> paramaters(vector_data);
+
+    paramaters.push_back('0');
+
+
+    sendCommand(SHUTTER_SPEED_CONTROL_FINE, paramaters,false);
+    return commandReplay(TYPE2, 2);
+
+}

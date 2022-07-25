@@ -38,8 +38,14 @@ bool AutoFocus = false;
 bool oneShotAF = false;
 bool changeShutter = false;
 bool changeGain = false;
+bool changeND = false;
+bool ChangeColour = false;
+
 uint16_t SetApature = 0;
-void checkButton()
+uint16_t Gain = 0;
+
+
+void Buttion_1()
 {
   static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
@@ -49,124 +55,126 @@ void checkButton()
   }
   last_interrupt_time = interrupt_time;
 }
-void autoFocusButton()
+void Buttion_2()
 {
   static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
-    Serial.println("Auto Focus Button Pressed");
-    AutoFocus = true;
-  }
-  last_interrupt_time = interrupt_time;
-}
-void setGainButton()
-{
-  static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
-  if (interrupt_time - last_interrupt_time > debounceTime)
-  {
-    Serial.println("set gain Button Pressed");
-    changeGain = true;
-  }
-  last_interrupt_time = interrupt_time;
-}
-void shutterControlButton()
-{
-  static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
-  if (interrupt_time - last_interrupt_time > debounceTime)
-  {
-    Serial.println("Shutter Control Button Pressed");
-    changeShutter = true;
-  }
-  last_interrupt_time = interrupt_time;
-}
-void oneShotAFButton()
-{
-  static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
-  if (interrupt_time - last_interrupt_time > debounceTime)
-  {
-    Serial.println("One Shot AF Button Pressed");
-    oneShotAF = true;
-  }
-  last_interrupt_time = interrupt_time;
-}
-void f2_8Button()
-{
-  static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
-  if (interrupt_time - last_interrupt_time > debounceTime)
-  {
-    Serial.println("F2.8 Button Pressed");
+    Serial.println("Bution 2 Pushed");
     SetApature = F2_8;
   }
   last_interrupt_time = interrupt_time;
 }
-void F4_0Button()
+void Buttion_3()
 {
   static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
-    Serial.println("F4.0 Button Pressed");
+    Serial.println("Buttion 3 Pushed");
     SetApature = F4_0;
   }
   last_interrupt_time = interrupt_time;
 }
-void F5_6Button()
+void Buttion_4()
 {
   static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
-    Serial.println("F5.6 Button Pressed");
+    Serial.println("Buttion 4 Pushed");
     SetApature = F5_6;
   }
   last_interrupt_time = interrupt_time;
 }
-void F8_0Button()
+void Buttion_5()
 {
   static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
-    Serial.println("F 8.0 Button Pressed");
-    SetApature = F8;
+    Serial.println("Buttion 5 Pushed");
+    changeShutter = true;
+    changeND = true;
+    ChangeColour = true;
   }
   last_interrupt_time = interrupt_time;
 }
-void F11Button()
+void A_Button()
 {
   static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
-    Serial.println("F11 Button Pressed");
-    SetApature = F11;
+    Serial.println("Buttion A Pressed");
+    Gain = G0;
   }
   last_interrupt_time = interrupt_time;
 }
-void F16Button()
+void B_Buttion()
 {
   static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
-    Serial.println("F16 Button Pressed");
-    SetApature = F16;
+    Serial.println("Buttion B Pressed");
+    Gain = G3;
   }
   last_interrupt_time = interrupt_time;
 }
-void F22Button()
+void C_Buttion()
 {
   static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
   if (interrupt_time - last_interrupt_time > debounceTime)
   {
-    Serial.println("F22 Button Pressed");
-    SetApature = F22;
+    Serial.println("Buttion C Pressed");
+    Gain = G6;
+  }
+  last_interrupt_time = interrupt_time;
+}
+void D_Buttion()
+{
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+  if (interrupt_time - last_interrupt_time > debounceTime)
+  {
+    Serial.println("Buttion D Pressed");
+    Gain = G9;
+  }
+  last_interrupt_time = interrupt_time;
+}
+void E_Buttion()
+{
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+  if (interrupt_time - last_interrupt_time > debounceTime)
+  {
+    Serial.println("Buttion E Pressed");
+    Gain = G12;
+  }
+  last_interrupt_time = interrupt_time;
+}
+void F_Buttion()
+{
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+  if (interrupt_time - last_interrupt_time > debounceTime)
+  {
+    Serial.println("Buttion F Pressed");
+    Gain = G15;
+  }
+  last_interrupt_time = interrupt_time;
+}
+void G_Buttion()
+{
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+  if (interrupt_time - last_interrupt_time > debounceTime)
+  {
+    Serial.println("Buttion G Pressed");
+    Gain = G18;
   }
   last_interrupt_time = interrupt_time;
 }
@@ -179,40 +187,40 @@ void setup()
   delay(1000);
   Serial.println("Setup Started");
   pinMode(BUTTION_1, INPUT_PULLUP);
-  attachInterrupt(BUTTION_1, checkButton, FALLING);
+  attachInterrupt(BUTTION_1, Buttion_1, FALLING);
 
   pinMode(BUTTION_2, INPUT_PULLUP);
-  attachInterrupt(BUTTION_2, autoFocusButton, FALLING);
+  attachInterrupt(BUTTION_2, Buttion_2, FALLING);
 
   pinMode(BUTTION_3, INPUT_PULLUP);
-  attachInterrupt(BUTTION_3, setGainButton, FALLING);
+  attachInterrupt(BUTTION_3, Buttion_3, FALLING);
 
   pinMode(BUTTION_4, INPUT_PULLUP);
-  attachInterrupt(BUTTION_4, shutterControlButton, FALLING);
+  attachInterrupt(BUTTION_4, Buttion_4, FALLING);
 
   pinMode(BUTTION_5, INPUT_PULLUP);
-  attachInterrupt(BUTTION_5, oneShotAFButton, FALLING);
+  attachInterrupt(BUTTION_5, Buttion_5, FALLING);
 
   pinMode(BUTTION_A, INPUT_PULLUP);
-  attachInterrupt(BUTTION_A, f2_8Button, FALLING);
+  attachInterrupt(BUTTION_A, A_Button, FALLING);
 
   pinMode(BUTTION_B, INPUT_PULLUP);
-  attachInterrupt(BUTTION_B, F4_0Button, FALLING);
+  attachInterrupt(BUTTION_B, B_Buttion, FALLING);
 
   pinMode(BUTTION_C, INPUT_PULLUP);
-  attachInterrupt(BUTTION_C, F5_6Button, FALLING);
+  attachInterrupt(BUTTION_C, C_Buttion, FALLING);
 
   pinMode(BUTTION_D, INPUT_PULLUP);
-  attachInterrupt(BUTTION_D, F8_0Button, FALLING);
+  attachInterrupt(BUTTION_D, D_Buttion, FALLING);
 
   pinMode(BUTTION_E, INPUT_PULLUP);
-  attachInterrupt(BUTTION_E, F11Button, FALLING);
+  attachInterrupt(BUTTION_E, E_Buttion, FALLING);
 
   pinMode(BUTTION_F, INPUT_PULLUP);
-  attachInterrupt(BUTTION_F, F16Button, FALLING);
+  attachInterrupt(BUTTION_F, F_Buttion, FALLING);
 
   pinMode(BUTTION_G, INPUT_PULLUP);
-  attachInterrupt(BUTTION_G, F22Button, FALLING);
+  attachInterrupt(BUTTION_G, G_Buttion, FALLING);
   Serial.println("Setup Completed");
 }
 
@@ -284,10 +292,28 @@ void setShutterSpeed()
 }
 void changeCameraGain()
 {
-  if (changeGain)
+  if (Gain)
   {
-    camera.setGain();
-    changeGain = false;
+    camera.setGain(Gain);
+    Gain = 0;
+  }
+  
+}
+void setND()
+{
+  if (changeND)
+  {
+    camera.setND();
+    changeND = false;
+  }
+  
+}
+void setColourTemp()
+{
+  if (ChangeColour)
+  {
+    camera.setWhiteKelv();
+    ChangeColour = false;
   }
   
 }
@@ -303,6 +329,8 @@ void loop()
   setAutoFocus();
   oneShotFocus();
   setShutterSpeed();
+  setND();
+  setColourTemp();
   changeCameraGain();
 }
 

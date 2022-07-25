@@ -13,6 +13,9 @@
 #define SHUTTER_SPEED_CONTROL       0x01AD      //Control shutter speed
 #define SHUTTER_SPEED_CONTROL_FINE  0x019D      //Control shutter speed
 #define GAIN_CONTROL_FINE           0x19E       //Gain Control
+
+#define SET_WHITE_BALANCE_KELV      0x01E0      //Set the white balance Temp
+#define ND_FILTER_CONTROL           0x01B6      // Control the internal ND Filter
 enum COMMAND_TYPE
 {
     TYPE1 = 34,
@@ -28,4 +31,15 @@ enum APATURE_VALUES
     F11 = 0x8F,
     F16 = 0x7F,
     F22 = 0x6F
+};
+
+enum GAIN_BALIES
+{   
+    G0 = 0x00,
+    G3 = 0x01,
+    G6 = 0x02,
+    G9 = 0x03,
+    G12 = 0x04,
+    G15 = 0x05,
+    G18 = 0x06
 };
