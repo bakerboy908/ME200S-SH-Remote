@@ -42,6 +42,7 @@ public:
     bool setShutter();
     bool setGain(uint16_t Gain);
     bool setWhiteKelv();
+    bool setGain0();
 
     bool setND();
 };

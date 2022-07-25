@@ -43,6 +43,8 @@ bool changeGain = false;
 bool changeND = false;
 bool ChangeColour = false;
 
+bool Gain0 = false;
+
 uint16_t SetApature = 0;
 uint16_t Gain = 0;
 
@@ -111,6 +113,7 @@ void A_Button()
   {
     Serial.println("Buttion A Pressed");
     Gain = G0;
+    Gain0 = true;
   }
   last_interrupt_time = interrupt_time;
 }
@@ -321,6 +324,15 @@ void setColourTemp()
   }
   
 }
+void setgain0()
+{
+  if (Gain0)
+  {
+    camera.setGain0();
+    Gain0 = false;
+  }
+  
+}
 void loop()
 {
   delay(1000);
@@ -339,6 +351,8 @@ void loop()
   setColourTemp();
   Gain = G6;
   changeCameraGain();
+
+  setgain0();
 }
 
 void printArray(char array[])
