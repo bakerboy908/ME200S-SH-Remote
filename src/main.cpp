@@ -4,32 +4,32 @@
 void printArray(char array[]);
 #ifdef VERSION_ONE
 
-#define CHECK_BUTTON_PIN 11
-#define AUTO_FOCUS_PIN 8
-#define SET_BUTTON_PIN 5
-#define SHUTTER_COONTROL_BUTTON_PIN 3
-#define ONESHOT_AF_BUTTON_PIN 2
-#define F2_8_BUTTON_PIN A0
-#define F4_0_BUTTON_PIN A1
-#define F5_6_BUTTON_PIN A2
-#define F8_0_BUTTON_PIN A3
-#define F11_BUTTON_PIN A5
-#define F16_BUTTON_PIN A7
-#define F22_BUTTON_PIN 10
+#define BUTTION_1 11
+#define BUTTION_2 8
+#define BUTTION_3 5
+#define BUTTION_4 3
+#define BUTTION_5 2
+#define BUTTION_A A0
+#define BUTTION_B A1
+#define BUTTION_C A2
+#define BUTTION_D A3
+#define BUTTION_E A5
+#define BUTTION_F A7
+#define BUTTION_G 10
 #endif
 #ifndef VERSION_ONE
-#define CHECK_BUTTON_PIN A4
-#define AUTO_FOCUS_PIN A3
-#define SET_BUTTON_PIN A2
-#define SHUTTER_COONTROL_BUTTON_PIN A1
-#define ONESHOT_AF_BUTTON_PIN A0
-#define F2_8_BUTTON_PIN 5
-#define F4_0_BUTTON_PIN 6
-#define F5_6_BUTTON_PIN 7
-#define F8_0_BUTTON_PIN 9
-#define F11_BUTTON_PIN 10
-#define F16_BUTTON_PIN 11
-#define F22_BUTTON_PIN 12
+#define BUTTION_1 A4
+#define BUTTION_2 A3
+#define BUTTION_3 A2
+#define BUTTION_4 A1
+#define BUTTION_5 A0
+#define BUTTION_A 5
+#define BUTTION_B 6
+#define BUTTION_C 7
+#define BUTTION_D 9
+#define BUTTION_E 10
+#define BUTTION_F 11
+#define BUTTION_G 12
 #endif
 ME200S camera;
 
@@ -178,41 +178,41 @@ void setup()
   Serial1.begin(9600);
   delay(1000);
   Serial.println("Setup Started");
-  pinMode(CHECK_BUTTON_PIN, INPUT_PULLUP);
-  attachInterrupt(CHECK_BUTTON_PIN, checkButton, FALLING);
+  pinMode(BUTTION_1, INPUT_PULLUP);
+  attachInterrupt(BUTTION_1, checkButton, FALLING);
 
-  pinMode(AUTO_FOCUS_PIN, INPUT_PULLUP);
-  attachInterrupt(AUTO_FOCUS_PIN, autoFocusButton, FALLING);
+  pinMode(BUTTION_2, INPUT_PULLUP);
+  attachInterrupt(BUTTION_2, autoFocusButton, FALLING);
 
-  pinMode(SET_BUTTON_PIN, INPUT_PULLUP);
-  attachInterrupt(SET_BUTTON_PIN, setGainButton, FALLING);
+  pinMode(BUTTION_3, INPUT_PULLUP);
+  attachInterrupt(BUTTION_3, setGainButton, FALLING);
 
-  pinMode(SHUTTER_COONTROL_BUTTON_PIN, INPUT_PULLUP);
-  attachInterrupt(SHUTTER_COONTROL_BUTTON_PIN, shutterControlButton, FALLING);
+  pinMode(BUTTION_4, INPUT_PULLUP);
+  attachInterrupt(BUTTION_4, shutterControlButton, FALLING);
 
-  pinMode(ONESHOT_AF_BUTTON_PIN, INPUT_PULLUP);
-  attachInterrupt(ONESHOT_AF_BUTTON_PIN, oneShotAFButton, FALLING);
+  pinMode(BUTTION_5, INPUT_PULLUP);
+  attachInterrupt(BUTTION_5, oneShotAFButton, FALLING);
 
-  pinMode(F2_8_BUTTON_PIN, INPUT_PULLUP);
-  attachInterrupt(F2_8_BUTTON_PIN, f2_8Button, FALLING);
+  pinMode(BUTTION_A, INPUT_PULLUP);
+  attachInterrupt(BUTTION_A, f2_8Button, FALLING);
 
-  pinMode(F4_0_BUTTON_PIN, INPUT_PULLUP);
-  attachInterrupt(F4_0_BUTTON_PIN, F4_0Button, FALLING);
+  pinMode(BUTTION_B, INPUT_PULLUP);
+  attachInterrupt(BUTTION_B, F4_0Button, FALLING);
 
-  pinMode(F5_6_BUTTON_PIN, INPUT_PULLUP);
-  attachInterrupt(F5_6_BUTTON_PIN, F5_6Button, FALLING);
+  pinMode(BUTTION_C, INPUT_PULLUP);
+  attachInterrupt(BUTTION_C, F5_6Button, FALLING);
 
-  pinMode(F8_0_BUTTON_PIN, INPUT_PULLUP);
-  attachInterrupt(F8_0_BUTTON_PIN, F8_0Button, FALLING);
+  pinMode(BUTTION_D, INPUT_PULLUP);
+  attachInterrupt(BUTTION_D, F8_0Button, FALLING);
 
-  pinMode(F11_BUTTON_PIN, INPUT_PULLUP);
-  attachInterrupt(F11_BUTTON_PIN, F11Button, FALLING);
+  pinMode(BUTTION_E, INPUT_PULLUP);
+  attachInterrupt(BUTTION_E, F11Button, FALLING);
 
-  pinMode(F16_BUTTON_PIN, INPUT_PULLUP);
-  attachInterrupt(F16_BUTTON_PIN, F16Button, FALLING);
+  pinMode(BUTTION_F, INPUT_PULLUP);
+  attachInterrupt(BUTTION_F, F16Button, FALLING);
 
-  pinMode(F22_BUTTON_PIN, INPUT_PULLUP);
-  attachInterrupt(F22_BUTTON_PIN, F22Button, FALLING);
+  pinMode(BUTTION_G, INPUT_PULLUP);
+  attachInterrupt(BUTTION_G, F22Button, FALLING);
   Serial.println("Setup Completed");
 }
 
