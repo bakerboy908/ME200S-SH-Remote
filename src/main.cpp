@@ -2,6 +2,8 @@
 #include <ME200S.hpp>
 #define debounceTime 200
 void printArray(char array[]);
+
+// #define VERSION_ONE
 #ifdef VERSION_ONE
 
 #define BUTTION_1 11
